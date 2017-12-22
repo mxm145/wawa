@@ -5,33 +5,6 @@
   <title>这有一个神奇的娃娃机 可以预见你的2018</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script>
-  var wx_tk = '';
-  var $_GET = (function(){
-    var url = window.document.location.href.toString();
-    var u = url.split("?");
-    if(typeof(u[1]) == "string"){
-      u = u[1].split("&");
-      var get = {};
-      for(var i in u){
-        var j = u[i].split("=");
-        get[j[0]] = j[1];
-      }
-      return get;
-    }else{
-      return {};
-    }
-  })();
-  var wx_tk = sessionStorage.getItem("wx_tk");
-  if(wx_tk == null || wx_tk == undefined){
-    sessionStorage.setItem("wx_tk", 0);
-    window.location.href='/new/index.php?nova_p=aWxaK08wdWhwMU93NlQ1aW91a3hNcXVLRDl3WFI1bk55MkVwc2VOanA2cz0@';
-  }
-  if(wx_tk == 0){
-    sessionStorage.setItem("wx_tk", $_GET['wx_tk']);
-    wx_tk = $_GET['wx_tk'];
-  }
-  </script>
   <script src="js/easeljs.min.js"></script>
   <script src="js/tweenjs.min.js"></script>
   <script src="js/preloadjs.min.js"></script>
