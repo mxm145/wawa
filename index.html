@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>这有一个神奇的娃娃机 可以预见你的2018</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+  var wx_tk = '';
+  var $_GET = (function(){
+    var url = window.document.location.href.toString();
+    var u = url.split("?");
+    if(typeof(u[1]) == "string"){
+      u = u[1].split("&");
+      var get = {};
+      for(var i in u){
+        var j = u[i].split("=");
+        get[j[0]] = j[1];
+      }
+      return get;
+    }else{
+      return {};
+    }
+  })();
+  var wx_tk = sessionStorage.getItem("wx_tk");
+  if(wx_tk == null || wx_tk == undefined){
+    sessionStorage.setItem("wx_tk", 0);
+    window.location.href='/new/index.php?nova_p=aWxaK08wdWhwMU93NlQ1aW91a3hNcXVLRDl3WFI1bk55MkVwc2VOanA2cz0@';
+  }
+  if(wx_tk == 0){
+    sessionStorage.setItem("wx_tk", $_GET['wx_tk']);
+    wx_tk = $_GET['wx_tk'];
+  }
+  </script>
+  <script src="js/easeljs.min.js"></script>
+  <script src="js/tweenjs.min.js"></script>
+  <script src="js/preloadjs.min.js"></script>
+  <style>
+  html,body{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+  }
+  img{
+    width: 100%;
+  }
+  </style>
+</head>
+<body>
+<canvas id="myCanvas" width="750" height="1206"></canvas>
+<audio src="music.mp3" id="bgm" loop="loop" preload="auto"></audio>
+<script src="js/screen1.js"></script>
+<script src="js/screen2.js"></script>
+<script src="js/screen3.js"></script>
+<script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script>
+var canvas = document.getElementById("myCanvas");
+canvas.style.position = "absolute";
+var w = document.body.offsetWidth;
+var h = document.body.offsetHeight;
+var scale = w / canvas.width;
+canvas.style.width = w + "px";
+canvas.style.height = h + "px";
+canvas.style.left = 0;
+canvas.style.top = 0;
+
+var stage, s1, s2, nickname, bgm, musicRotation;
+var music = document.getElementById('bgm');
+
+stage = new createjs.Stage(canvas);
+createjs.Touch.enable(stage);
+
+var loading = new createjs.Bitmap('./images/loading.jpg');
+var text = new createjs.Text("加载中 0%", "50px Arial", "#fff");
+text.x = 255;
+text.y = 590;
+stage.addChild(loading);
+stage.addChild(text);
+stage.update();
+
+var boxIndex = Math.ceil(Math.random() * 5);
+var resIndex = Math.ceil(Math.random() * 30);
+
+var queue = new createjs.LoadQueue(true, '', true);
+queue.on("complete", handleComplete, this);
+queue.on("fileprogress", handleProgress, this);
+queue.loadManifest([
+  {id: 'bg1', src: './images/bg1.jpg'},
+  {id: 'bg2', src: './images/bg2.jpg'},
+  {id: 'boundle', src: './images/boundle.png'},
+  {id: 'box', src: './images/box'+ boxIndex +'.png'},
+  {id: 'light1', src: './images/light1.png'},
+  {id: 'light2', src: './images/light2.png'},
+  {id: 'btn01', src: './images/btn01.png'},
+  {id: 'btn02', src: './images/btn02.png'},
+  {id: 'letter1', src: './images/letter1.png'},
+  {id: 'letter2', src: './images/letter2.png'},
+  {id: 'letter3', src: './images/letter3.png'},
+  {id: 'letter4', src: './images/letter4.png'},
+  {id: 'letter5', src: './images/letter5.png'},
+  {id: 'img01', src: './images/img01.jpg'},
+  {id: 'img02', src: './images/img02.png'},
+  {id: 'img03', src: './images/img03.png'},
+  {id: 'res', src: './images/res'+ resIndex +'.jpg'},
+  {id: 'music', src: './images/music.png'}
+]);
+
+function handleComplete(){
+  stage.removeChild(loading);
+  stage.removeChild(text);
+  init();
+}
+
+function handleProgress(){
+  text.text = '加载中 ' + Math.round(queue.progress * 100) + '%';
+  stage.update();
+}
+
+function init(){
+  s1 = new screen1();
+  s1.on('click', next);
+  stage.addChild(s1);
+
+  bgm = new createjs.Bitmap(queue.getResult('music'));
+  bgm.x = 695;
+  bgm.y = 135;
+  bgm.regX = 30;
+  bgm.regY = 30;
+  stage.addChild(bgm);
+  bgm.on('click', toggleMusic);
+
+  musicRotation = createjs.Tween.get(bgm, {loop: -1}).to({rotation: 360}, 1500);
+
+  startGame();
+}
+function next(){
+  createjs.Tween.get(s1).to({alpha: 0}, 1000).call(function(){
+    s1.parent.removeChild(s1);
+    s2 = new screen2(4);
+    stage.addChild(s2);
+    stage.setChildIndex(bgm, 1);
+  })
+}
+function next2(){
+  s2.removeChildAt(3, 4, 5, 6, 7);
+  createjs.Tween.get(s2.getChildAt(1)).to({skewY: 90}, 1000);
+  createjs.Tween.get(s2.getChildAt(2)).to({skewY: -90}, 1000).call(function(){
+    s2.parent.removeChild(s2);
+    s3 = new screen3(nickname);
+    stage.addChild(s3);
+  });
+}
+function savePic(){
+  var image = new Image();
+  image.src = canvas.toDataURL("image/png");
+  document.body.appendChild(image);
+  canvas.style.display = 'none';
+}
+function toggleMusic(){
+  if (musicRotation.paused) {
+    music.play();
+    musicRotation.paused = false;
+  }else{
+    music.pause();
+    musicRotation.paused = true;
+  }
+}
+function startGame(){
+  createjs.Ticker.addEventListener('tick', function(){
+    stage.update();
+  });
+}
+</script>
+</body>
+</html>
